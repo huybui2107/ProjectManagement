@@ -1,0 +1,76 @@
+openapi: 3.0.3
+info:
+  title: Project management
+  version: 1.0.11
+servers:
+  - url: http://localhost:6000/api
+tags:
+  - name: users
+paths:
+  /user/login:
+    post:
+      tags:
+        - users
+      summary: Authenticate user to get access token and refresh token
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginBody"
+        required: true
+      responses:
+        "200":
+          description: Login successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticateRes'
+
+        "403":
+            description: Login fail
+
+components:
+  schemas:
+    LoginBody:
+      type: object
+      properties:
+        email:
+          type: string
+          example: huy@gmail.com
+        password:
+          type: string
+          example: 12345678
+    AuthenticateRes:
+      type: object
+      properties:
+        message:
+          type: string
+          example: OK
+        status:
+          type: string
+          example: 200
+        metadata:
+          type: object
+          properties:
+            User:
+              type: object
+              properties:
+                _id:
+                  type: string
+                username:
+                  type: string
+                email:
+                  type: string
+            tokens:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                refreshToken:
+                  type: string
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
